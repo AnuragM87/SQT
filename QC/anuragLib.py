@@ -1,5 +1,4 @@
 import numpy as np
-
 class SingleQubitTomography:
     def __init__(self, Nh=0, Nv=0, Nl=0, Nd=0):
         self.Nh = Nh
@@ -10,7 +9,13 @@ class SingleQubitTomography:
         self.Pl = 0
         self.Pd = 0
         self.Pv = 0
-
+        self.S0=1
+        self.S1=0
+        self.S2=0
+        self.S3=0
+        self.rho=0
+#setter and getter for requied values
+#-----------------*********-----------------#
     # Getter and Setter for Nh, Nv, Nl, Nd
     def get_Nh(self):
         return self.Nh
@@ -61,15 +66,45 @@ class SingleQubitTomography:
     def get_Pv(self):
         return self.Pv
 
-    # Display input data
+    #setter getter for S0 , S1, S2, S3
+    def set_S0(self,S0):
+        self.S0=S0
+    
+    def get_S0(self):
+        return self.S0
+    
+    def set_S1(self,S1):
+        self.S1=S1
+    
+    def get_S1(self):
+        return self.S1
+    
+    def set_S2(self,S2):
+        self.S2=S2
+    
+    def get_S2(self):
+        return self.S2
+    
+    def set_S3(self,S3):
+        self.S3=S3
+    
+    def get_S3(self):
+        return self.S3
+    
+
+    #set and get rho matrix
+    def set_rho(self,rho):
+        self.rho=rho
+    
+    def get_rho(self):
+        return self.rho
+    #-----------------*********-----------------#
     def inputData(self):
         print(f"Input Data: \nNh={self.get_Nh()}\nNv={self.get_Nv()}\nNl={self.get_Nl()}\nNd={self.get_Nd()}")
 
-    # Calculate total measurements
     def Ntotal(self):
         return self.Nh + self.Nv
 
-    # Calculate probabilities
     def probOfVectors(self):
         self.set_Ph()
         self.set_Pl()
@@ -82,7 +117,6 @@ class SingleQubitTomography:
         print(f"Probabilities:\nPh={Ph:.3f}\nPl={Pl:.3f}\nPd={Pd:.3f}\nPv={Pv:.3f}")
         return round(Ph, 3), round(Pl, 3), round(Pd, 3), round(Pv, 3)
 
-    # Set all vector values
     def setAllVectors(self):
         print("Enter the values for Nh, Nv, Nl, Nd")
         inputNh = int(input("Nh: "))
@@ -95,11 +129,48 @@ class SingleQubitTomography:
         self.set_Nd(inputNd)
         print("Values set successfully")
 
-    # Generate a column matrix
-    def generateMatrix(self):
+    def stokesVector(self):
         self.probOfVectors()
-        values = [1, 2 * self.Ph - 1, 2 * self.Pl - 1, 2 * self.Pd - 1]
+        values = [
+            1,
+            2 * self.Ph - 1,
+            2 * self.Pl - 1,
+            2 * self.Pd - 1
+        ]
         matrix = np.array(values).reshape(-1, 1)
-        print("Generated Matrix:")
-        print(matrix)
         return matrix
+    
+    def rhoMatrix(self,S):
+        S0, S1, S2, S3 = S
+        self.set_S0(S0)
+        self.set_S1(S1)
+        self.set_S2(S2)
+        self.set_S3(S3)
+        rho = 0.5 * np.array([
+            [S0 + S3, S1 - 1j * S2],
+            [S1 + 1j * S2, S0 - S3]
+        ])
+        self.set_rho(rho)
+        return rho
+    
+    def expectation_S1(self):
+        # Pauli-X matrix
+        sigma_x = np.array([[0, 1],
+                            [1, 0]])
+        expectation = np.trace(np.dot(self.get_rho(), sigma_x))
+        return np.real(expectation)  
+    
+    def expectation_S2(self):
+        # Pauli-Y matrix
+        sigma_y = np.array([[0, -1j],
+                            [1j, 0]])
+        expectation = np.trace(np.dot(self.get_rho(), sigma_y))
+        return np.real(expectation)
+    
+    def expectation_S3(self):
+        # Pauli-Z matrix
+        sigma_z = np.array([[1, 0],
+                            [0, -1]])
+        expectation = np.trace(np.dot(self.get_rho(), sigma_z))
+        return np.real(expectation)
+    
