@@ -98,7 +98,7 @@ class SingleQubitTomography:
     # Generate a column matrix
     def generateMatrix(self):
         self.probOfVectors()
-        values = [1, 2 * self.Nh - 1, 2 * self.Nl - 1, 2 * self.Nd - 1]
+        values = [1, 2 * self.Ph - 1, 2 * self.Pl - 1, 2 * self.Pd - 1]
         matrix = np.array(values).reshape(-1, 1)
         print("Generated Matrix:")
         print(matrix)
