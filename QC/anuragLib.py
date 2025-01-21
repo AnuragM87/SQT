@@ -174,3 +174,10 @@ class SingleQubitTomography:
         expectation = np.trace(np.dot(self.get_rho(), sigma_z))
         return np.real(expectation)
     
+    def checkTraceOfRho(self):
+        if(np.trace(self.get_rho())==1):
+            trace = True
+        else:
+            trace = False
+        return trace
+    
