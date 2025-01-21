@@ -1,4 +1,4 @@
-class Vectors:
+class SingleQubitTomography:
     def __init__(self, Nh=0, Nv=0, Nl=0, Nd=0):
         self.Nh = Nh
         self.Nv = Nv
@@ -36,11 +36,11 @@ class Vectors:
         return self.Nh + self.Nv
 
     def probOfVectors(self):
-        Ph=self.Nh/self.Ntotal()
-        Pl=self.Nl/self.Ntotal()
-        Pd=self.Nd/self.Ntotal()
-        print(f"Ph={Ph}\nPl={Pl}\nPd={Pd}")
-        return Ph,Pl,Pd
+        Ph = self.Nh / self.Ntotal()
+        Pl = self.Nl / self.Ntotal()
+        Pd = self.Nd / self.Ntotal()
+        print(f"Ph={Ph:.3f}\nPl={Pl:.3f}\nPd={Pd:.3f}")
+        return round(Ph, 3), round(Pl, 3), round(Pd, 3)
     
     def setAllVectors(self):
         print("Enter the values for Nh, Nv, Nl, Nd")
